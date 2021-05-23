@@ -231,6 +231,8 @@ as numeric escapes rather than letter-based escapes, which is ugly."
                     (and (= tv :userdata)
                          (-?> (getmetatable x) (. :__fennelview))))
                 (pp-table x options indent)
+                (and (= tv :userdata) (= :table (type options)) options.view-userdata)
+                (options.view-userdata x pp options indent)
                 (= tv :number)
                 (number->string x)
                 (and (= tv :string) (colon-string? x)
@@ -254,11 +256,12 @@ Can take an options table with these keys:
 * :metamethod? (boolean: default: true) use the __fennelview metamethod if found
 * :empty-as-sequence? (boolean, default: false) render empty tables as []
 * :line-length (number, default: 80) length of the line at which
-  multi-line output for tables is forced
+    multi-line output for tables is forced
 * :escape-newlines? (default: false) emit strings with \\n instead of newline
 * :prefer-colon? (default: false) emit strings in colon notation when possible
-* :utf8? (boolean, default true) whether to use utf8 module to compute string
-  lengths
+* :utf8? (boolean, default true) whether to use utf8 module for string lengths
+* :view-userdata (function) this is called when attepting to serialize userdata
+    which does not have a __fennelview metamethod; takes the same arguments
 
 The `__fennelview` metamethod should take the table being serialized as its
 first argument, a function as its second argument, options table as third

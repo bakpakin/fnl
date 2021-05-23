@@ -71,8 +71,16 @@
   (l.assertEquals (view ["\a" "\t"]) "[\"\\a\" \"\\t\"]")
   (l.assertEquals (view "[\7-\13]") "\"[\\a-\\r]\""))
 
+(fn view-userdata [x view2 options]
+  (.. "#<userdata " (view2 [1 2 3]) ">"))
+
+(fn test-view-userdata []
+  (l.assertEquals (view {:io.stdout io.stdout} {: view-userdata})
+                  "{:io.stdout #<userdata [1 2 3]>}"))
+
 {: test-fennelview
  : test-newline
  : test-fennelview-userdata-handling
  : test-cycles
- : test-escapes}
+ : test-escapes
+ : test-view-userdata}
