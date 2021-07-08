@@ -255,6 +255,7 @@ as numeric escapes rather than letter-based escapes, which is ugly."
           ;; main serialization loop, entry point is defined below
           (let [indent (or indent 0)
                 options (or options (make-options x))
+                x (if options.preprocess (options.preprocess x options) x)
                 tv (type x)]
             (if (or (= tv :table)
                     (and (= tv :userdata)
@@ -290,6 +291,8 @@ Can take an options table with these keys:
   lengths
 * :max-sparse-gap (integer, default 10) maximum gap to fill in with nils in
   sparse sequential tables.
+* :preprocess (function) if present, it's called on each value in x and the
+  result is then used instead of x for pretty printing; takes the same arguments
 
 The `__fennelview` metamethod should take the table being serialized as its
 first argument, a function as its second argument, options table as third
